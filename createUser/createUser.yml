@@ -1,0 +1,22 @@
+- name: Ensure group "sysadmins" exists
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  group:
+    name: sysadmins
+    gid: 5055
+    state: present
+
+- name: Ensure user "ktierney" exists
+  remote_user: ansible
+  # become: yes
+  # become_method: sudo
+  user:
+    name: ktierney
+    comment: "Managing linuxsysadmins"
+    uid: 5055
+    group: sysadmins
+    # groups: backup,healthcheck,ansible
+    shell: /bin/bash
+    password: "admin123"
+    state: present
