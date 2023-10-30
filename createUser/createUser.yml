@@ -1,22 +1,15 @@
-- name: Ensure group "sysadmins" exists
-  remote_user: ansible
-  become: yes
-  become_method: sudo
-  group:
-    name: sysadmins
-    gid: 5055
-    state: present
+- name: Create sysadmins group and add user ktierney on the localhost
+  hosts: localhost
+  connection: local 
 
-- name: Ensure user "ktierney" exists
-  remote_user: ansible
-  # become: yes
-  # become_method: sudo
-  user:
-    name: ktierney
-    comment: "Managing linuxsysadmins"
-    uid: 5055
-    group: sysadmins
-    # groups: backup,healthcheck,ansible
-    shell: /bin/bash
-    password: "admin123"
-    state: present
+  tasks:
+    - name: Ensure sysadmins group exists
+      group:
+        name: sysadmins
+        state: present
+
+    - name: Create user ktierney
+      user:
+        name: ktierney
+        state: present
+        groups: sysadmins
