@@ -1,0 +1,41 @@
+name: Validate Ansible Playbooks
+
+on:
+  push: 
+    branches: ["main"]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  ansible-playbooks:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        playbookDirectory: [createUser, setupDocker]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        if: startsWith(matrix.os, 'ubuntu-') || startsWith(matrix.os, 'macos-')
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Setup Python on Windows
+        if: startsWith(matrix.os, 'windows-')
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+
+      - name: Install Ansible
+        run: pip install ansible
+
+      - name: Run Ansible Playbook
+        run: |
+          cd ${{ matrix.playbookDirectory }}
+          ansible-playbook playbook.ansible.yml

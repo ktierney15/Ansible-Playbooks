@@ -1,0 +1,16 @@
+- name: Setup Docker
+  hosts: localhost
+  connection: local
+  become: true
+
+tasks:
+# download and run applicaiton 
+  - name: Install Docker
+    package:
+      name: docker
+      state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
